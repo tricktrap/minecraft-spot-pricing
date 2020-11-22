@@ -50,6 +50,21 @@ Parameters:
     Description: "Java version (Examples include latest, adopt13, openj9, etc) Refer to tag descriptions available here: https://github.com/itzg/docker-minecraft-server)"
     Default: 'latest'
 
+  MinecraftVersion:
+    Type: String
+    Description: "Minecraft version (Examples include LATEST, SNAPSHOT, or 1.7.9) Refer to version descriptions here: https://github.com/itzg/docker-minecraft-server/blob/master/README.md#versions"
+    Default: "LATEST"
+
+  InitMemory:
+    Type: String
+    Description: "Initial heap memory"
+    Default: "1G"
+
+  MaxMemory:
+    Type: String
+    Description: "Max heap memory"
+    Default: "1G"
+
   MinecraftTypeTag:
     Type: String
     Description: "(Examples include SPIGOT, BUKKIT, TUINITY, etc) Refer to tag descriptions available here: https://github.com/itzg/docker-minecraft-server)"
@@ -89,6 +104,9 @@ Metadata:
         - AdminPlayerNames
         - Difficulty
         - Whitelist
+        - MinecraftVersion
+        - InitMemory
+        - MaxMemory
       - Label: 
           default: Optional Remote Access (SSH) Configuration
         Parameters:
@@ -107,9 +125,15 @@ Metadata:
       SpotPrice:
         default: "Maximum spot price per hour? Leave blank to disable spot pricing."
       MinecraftImageTag:
-        default: "Which version of Minecraft do you want to launch?"
+        default: "Which version of Java do you want to use?"
       MinecraftTypeTag:
         default: "Which type of Minecraft do you want to launch?"
+      MinecraftImage:
+        default: "Which version of Minecraft do you want to launch?"
+      InitMemory:
+        default: "Initial heap memory"
+      MaxMemory:
+        default: "Max heap memory"
       AdminPlayerNames:
         default: "A comma delimited list (no spaces) of player names to be admins"
       Difficulty:
@@ -392,6 +416,12 @@ Resources:
               - Name: "WHITELIST"
                 Value: !Sub "${Whitelist}"
               - !Ref 'AWS::NoValue'
+            - Name: "VERSION"
+              Value: !Sub "${MinecraftVersion}"
+            - Name: "INIT_MEMORY"
+              Value: !Sub "${InitMemory}"
+            - Name: "MAX_MEMORY"
+              Value: !Sub "${MaxMemory}"
 
   # ====================================================
   # SET DNS RECORD
