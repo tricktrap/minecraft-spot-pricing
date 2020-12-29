@@ -84,6 +84,11 @@ Parameters:
     Description: Usernames of your friends
     Default: ''
 
+  FTBModpackId:
+    Type: String
+    Description: "FTB Modpack id (example: 25 for SkyFactory 3)"
+    Default: ''
+
 Metadata:
   AWS::CloudFormation::Interface:
     ParameterGroups:
@@ -107,6 +112,7 @@ Metadata:
         - MinecraftVersion
         - InitMemory
         - MaxMemory
+        - FTBModpackId
       - Label: 
           default: Optional Remote Access (SSH) Configuration
         Parameters:
@@ -148,6 +154,8 @@ Metadata:
         default: "If you have a hosted zone in Route 53 and wish to update a DNS record whenever your Minecraft instance starts, supply the hosted zone ID here."
       RecordName:
         default: "If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Minecraft instance starts, supply a record name here (e.g. minecraft.mydomain.com)."
+      FTBModpackId:
+        default: "A modpack id for FTB"
 
 Conditions:
   MinecraftTypeTagProvided: !Not [ !Equals [ !Ref MinecraftTypeTag, '' ] ]
@@ -158,6 +166,7 @@ Conditions:
   IpAddressProvided: !Not [ !Equals [ !Ref YourIp, '' ] ]
   DnsConfigEnabled: !And [ !Not [ !Equals [ !Ref HostedZoneId, '' ] ], !Not [ !Equals [ !Ref RecordName, '' ] ] ]
   SpotPriceProvided: !Not [ !Equals [ !Ref SpotPrice, '' ] ]
+  FTBModpackProvided: !Not [ !Equals [ !Ref FTBModpackId, '' ] ]
 
 
 Mappings:
@@ -422,6 +431,10 @@ Resources:
               Value: !Sub "${InitMemory}"
             - Name: "MAX_MEMORY"
               Value: !Sub "${MaxMemory}"
+            - !If
+              - FTBModpackProvided
+              - Name: "FTB_MODPACK_ID"
+                Value: !Sub "${FTBModpackId}"
 
   # ====================================================
   # SET DNS RECORD
